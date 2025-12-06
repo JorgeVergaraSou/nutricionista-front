@@ -1,0 +1,2 @@
+Verificacion de token valido.
+ en auth.guard.tsx se hace una Verificacion de Token valido, si este expiro redirige al login

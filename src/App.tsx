@@ -12,6 +12,8 @@ import RoutesWithNotFound from './utilities/RoutesWithNotFound.utility';
 import GuestPage from './pages/Private/Guest/Guest';
 
 import PrivateWrapper from './layouts/PrivateWrapper';
+import BuscarPaciente from './pages/Private/Pacientes/BuscarPaciente';
+import NuevoPaciente from './pages/Private/Pacientes/NuevoPaciente';
 
 const Login = lazy(() => import('./pages/Login/Login'));
 const Private = lazy(() => import('./pages/Private/Private'));
@@ -33,6 +35,8 @@ function App() {
             <Route element={<PrivateWrapper />}>
               <Route path={`${PrivateRoutes.PRIVATE}/*`} element={<Private />} />
               <Route path={PrivateRoutes.PERFIL} element={<ProfilePage />} />
+              <Route path={PrivateRoutes.BUSCAR_PACIENTE} element={<BuscarPaciente/>} />
+              <Route path={PrivateRoutes.NUEVO_PACIENTE} element={<NuevoPaciente/>} />
 
               <Route element={<RoleGuard role={Roles.ADMIN} />}>
                 <Route path={PrivateRoutes.ADMIN} element={<Admin />} />

@@ -7,7 +7,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import { Roles } from "../models";
+import { PrivateRoutes, Roles } from "../models";
 
 // Tipado del item del menú
 export type LeftMenuItem = {
@@ -45,12 +45,12 @@ export const leftMenuConfig: LeftMenuItem[] = [
       {
         label: "Buscar paciente",
         icon: <SearchIcon />,
-        path: "/admin/pacientes/buscar",
+        path: PrivateRoutes.BUSCAR_PACIENTE,
       },
       {
         label: "Nuevo paciente",
         icon: <AddIcon />,
-        path: "/admin/pacientes/nuevo",
+        path: PrivateRoutes.NUEVO_PACIENTE,
       },
     ],
   },

@@ -15,11 +15,10 @@ const MainLayout: React.FC<Props> = ({ children, left }) => {
       sx={{
         minHeight: "100vh",           // 👈 altura mínima de pantalla
         display: "flex",
-        flexDirection: "column",     // 👈 orden vertical
+        flexDirection: "column",  
+        bgcolor: "background.default",   // 🔥 Fondo verde global   // 👈 orden vertical
       }}
     >
-      {/* HEADER */}
-    
 
       {/* CONTENIDO PRINCIPAL OCUPA TODO EL ESPACIO DISPONIBLE */}
       <Box sx={{ flex: 1 }}>        {/* 👈 empuja el footer hacia abajo */}
