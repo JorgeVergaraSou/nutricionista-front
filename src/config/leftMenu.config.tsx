@@ -1,10 +1,10 @@
 // src/config/leftMenu.config.tsx
 import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
+//import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import SettingsIcon from "@mui/icons-material/Settings";
+//import SettingsIcon from "@mui/icons-material/Settings";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { PrivateRoutes, Roles } from "../models";
@@ -24,19 +24,19 @@ export type LeftMenuItem = {
 
 export const leftMenuConfig: LeftMenuItem[] = [
   {
-    label: "Dashboard",
+    label: "Inicio",
     icon: <DashboardIcon />,
-    path: "/admin/dashboard",
+    path: PrivateRoutes.ADMIN,
     roles: [Roles.ADMIN, Roles.USER],
   },
-
+/*
   {
     label: "Usuarios",
     icon: <PeopleIcon />,
     path: "/admin/usuarios",
     roles: [Roles.ADMIN],
   },
-
+*/
   {
     label: "Pacientes",
     icon: <PersonIcon />,
@@ -60,15 +60,17 @@ export const leftMenuConfig: LeftMenuItem[] = [
     icon: <CalendarMonthIcon />,
     roles: [Roles.ADMIN, Roles.USER],
     children: [
-      { label: "Agenda", icon: <SearchIcon />, path: "/admin/turnos/agenda" },
+      { label: "Agenda", 
+        icon: <SearchIcon />, 
+        path: PrivateRoutes.AGENDA_TURNOS },
       { label: "Nuevo turno", icon: <AddIcon />, path: "/admin/turnos/nuevo" },
     ],
   },
-
+/*
   {
     label: "Configuración",
     icon: <SettingsIcon />,
     path: "/admin/configuracion",
     roles: [Roles.ADMIN],
-  },
+  },*/
 ];

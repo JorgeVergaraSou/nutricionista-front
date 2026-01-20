@@ -5,7 +5,8 @@ import { AuthGuard } from './guards';
 import { Suspense, lazy } from 'react';
 import RoleGuard from './guards/rol.guard';
 import Admin from './pages/Private/Admin/Admin';
-
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import UserPage from './pages/Private/User/User';
 import ProfilePage from './pages/Private/Profile';
 import RoutesWithNotFound from './utilities/RoutesWithNotFound.utility';
@@ -14,13 +15,14 @@ import GuestPage from './pages/Private/Guest/Guest';
 import PrivateWrapper from './layouts/PrivateWrapper';
 import BuscarPaciente from './pages/Private/Pacientes/BuscarPaciente';
 import NuevoPaciente from './pages/Private/Pacientes/NuevoPaciente';
+import AgendaTurnos from './pages/Private/Turnos/AgendaTurnos';
 
 const Login = lazy(() => import('./pages/Login/Login'));
 const Private = lazy(() => import('./pages/Private/Private'));
 
 function App() {
   return (
-    <div>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Suspense fallback={<div>Loading...</div>}>        
 
         <RoutesWithNotFound>
@@ -37,6 +39,7 @@ function App() {
               <Route path={PrivateRoutes.PERFIL} element={<ProfilePage />} />
               <Route path={PrivateRoutes.BUSCAR_PACIENTE} element={<BuscarPaciente/>} />
               <Route path={PrivateRoutes.NUEVO_PACIENTE} element={<NuevoPaciente/>} />
+              <Route path={PrivateRoutes.AGENDA_TURNOS} element={<AgendaTurnos/>} />
 
               <Route element={<RoleGuard role={Roles.ADMIN} />}>
                 <Route path={PrivateRoutes.ADMIN} element={<Admin />} />
@@ -55,7 +58,7 @@ function App() {
           </Route>
         </RoutesWithNotFound>
       </Suspense>
-    </div>
+    </LocalizationProvider>
   );
 }
 

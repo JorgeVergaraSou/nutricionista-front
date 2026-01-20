@@ -12,4 +12,5 @@ export const PrivateRoutes = {
     PERFIL: '/perfil',
     BUSCAR_PACIENTE: '/admin/pacientes/buscar',
     NUEVO_PACIENTE: '/admin/pacientes/nuevo-paciente',
+    AGENDA_TURNOS: '/admin/turnos/agenda-turnos',
 }
