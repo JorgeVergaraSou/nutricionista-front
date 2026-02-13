@@ -1,3 +1,4 @@
+// src/pages/Private/Turnos/TurnoDialog.tsx
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -13,17 +14,20 @@ import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
-import { EstadoTurno } from "../../../enums/estadoTurno.enum";
-import { Turno, TurnoForm } from "../../../interfaces/turno.interface";
-import AutocompletePaciente from "../../../components/AutocompletePaciente";
+import { EstadoTurno } from "../../../../enums/estadoTurno.enum";
+import { Turno, TurnoForm } from "../../../../interfaces/turno.interface";
+import AutocompletePaciente from "../../../../components/AutocompletePaciente";
 
 
 interface Props {
   open: boolean;
   turno: Turno | null;
+  fechaPreseleccionada?: string | null;
   onClose: () => void;
   onSave: (data: TurnoForm) => void;
 }
+
+
 
 export default function TurnoDialog({
   open,

@@ -24,6 +24,7 @@ export interface PropsTurnosTable {
   turnos: Turno[];
   onEdit: (turno: Turno) => void;
   onDelete: (id: number) => void;
+  onPacienteClick: (turno: Turno) => void;
 }
 
 export interface TurnoForm {

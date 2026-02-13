@@ -1,5 +1,6 @@
 // src/services/turnos/turnos.service.ts
 import axios from "axios";
+import { Turno } from "../../interfaces/turno.interface";
 const apiUrl = `${import.meta.env.VITE_API_BASE_URL}`;
 
 export const obtenerTurnosPorFecha = (fecha: string) =>
@@ -13,3 +14,11 @@ export const editarTurno = (id: number, data: any) =>
 
 export const eliminarTurno = (id: number) =>
   axios.delete(`${apiUrl}/turnos/${id}`);
+
+export const obtenerTurnoPorId = (id: number) => {
+  return axios.get<Turno>(`${apiUrl}/turnos/${id}`);
+};
+
+export const actualizarTurno = (id: number, data: any) => {
+  return axios.patch(`${apiUrl}/turnos/${id}`, data);
+};

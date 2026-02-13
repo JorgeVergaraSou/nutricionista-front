@@ -13,4 +13,9 @@ export const PrivateRoutes = {
     BUSCAR_PACIENTE: '/admin/pacientes/buscar',
     NUEVO_PACIENTE: '/admin/pacientes/nuevo-paciente',
     AGENDA_TURNOS: '/admin/turnos/agenda-turnos',
+    AGENDA_SEMANAL: '/admin/turnos/agenda-semanal',
+    VISITS_NUEVA: '/admin/visits/nueva',
+    VISITS_HISTORIAL: '/admin/visits/historial/:patientId',
+
+    TURNOS_GESTION: '/admin/turnos/gestion',
 }

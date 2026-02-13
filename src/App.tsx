@@ -16,7 +16,10 @@ import PrivateWrapper from './layouts/PrivateWrapper';
 import BuscarPaciente from './pages/Private/Pacientes/BuscarPaciente';
 import NuevoPaciente from './pages/Private/Pacientes/NuevoPaciente';
 import AgendaTurnos from './pages/Private/Turnos/AgendaTurnos';
-
+import AgendaSemanal from './pages/Private/Turnos/AgendaSemanal';
+import ConsultaDiaria from './pages/Private/Visits/ConsultaDiaria';
+import GestionTurnos from './pages/Private/Turnos/Gestion/GestionTurnos';
+//import PatientHistory from './pages/Private/Visits/PatientHistory';
 const Login = lazy(() => import('./pages/Login/Login'));
 const Private = lazy(() => import('./pages/Private/Private'));
 
@@ -40,6 +43,10 @@ function App() {
               <Route path={PrivateRoutes.BUSCAR_PACIENTE} element={<BuscarPaciente/>} />
               <Route path={PrivateRoutes.NUEVO_PACIENTE} element={<NuevoPaciente/>} />
               <Route path={PrivateRoutes.AGENDA_TURNOS} element={<AgendaTurnos/>} />
+              <Route path={PrivateRoutes.AGENDA_SEMANAL} element={<AgendaSemanal/>} />
+              <Route path={PrivateRoutes.VISITS_NUEVA} element={<ConsultaDiaria />} />
+             {/* <Route path={PrivateRoutes.VISITS_HISTORIAL} element={<PatientHistory />}/> */} 
+              <Route path={PrivateRoutes.TURNOS_GESTION} element={<GestionTurnos />}  />
 
               <Route element={<RoleGuard role={Roles.ADMIN} />}>
                 <Route path={PrivateRoutes.ADMIN} element={<Admin />} />

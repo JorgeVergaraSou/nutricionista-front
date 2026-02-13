@@ -1,46 +1,42 @@
+// src/pages/Private/Turnos/AgendaTurnos.tsx
+
 import { useEffect, useState } from "react";
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Button,
   Snackbar,
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+
 import dayjs from "dayjs";
 import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers";
 
+import { useNavigate } from "react-router-dom";
 import TurnosTable from "./TurnosTable";
-import TurnoDialog from "./TurnoDialog";
-import {
-  obtenerTurnosPorFecha,
-  crearTurno,
-  editarTurno,
-  eliminarTurno,
-} from "../../../services/turnos/turnos.service";
+
+import { obtenerTurnosPorFecha } from "../../../services/turnos/turnos.service";
 
 import {
   FormFiltro,
   Turno,
-  TurnoForm,
 } from "../../../interfaces/turno.interface";
+
+import { PrivateRoutes } from "../../../models";
 
 export default function AgendaTurnos() {
   const { control, watch } = useForm<FormFiltro>({
     defaultValues: { fecha: dayjs().format("YYYY-MM-DD") },
   });
 
+  const navigate = useNavigate();
   const fecha = watch("fecha");
 
   const [turnos, setTurnos] = useState<Turno[]>([]);
   const [loading, setLoading] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [turnoSeleccionado, setTurnoSeleccionado] =
-    useState<Turno | null>(null);
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -48,6 +44,9 @@ export default function AgendaTurnos() {
     severity: "success" as "success" | "error",
   });
 
+  // --------------------------------------------------
+  // 📡 Cargar turnos por día
+  // --------------------------------------------------
   const cargarTurnos = async () => {
     setLoading(true);
     try {
@@ -68,41 +67,12 @@ export default function AgendaTurnos() {
     cargarTurnos();
   }, [fecha]);
 
-  const guardarTurno = async (data: TurnoForm) => {
-    try {
-      if (turnoSeleccionado) {
-        await editarTurno(turnoSeleccionado.id, data);
-      } else {
-        await crearTurno(data);
-      }
-      setOpenDialog(false);
-      cargarTurnos();
-    } catch (e: any) {
-      setSnackbar({
-        open: true,
-        message: e.response?.data?.message || "Error al guardar",
-        severity: "error",
-      });
-    }
-  };
-
   return (
     <Box sx={{ p: 3 }}>
-      <Box display="flex" justifyContent="space-between" mb={3}>
+      <Box mb={3}>
         <Typography variant="h5" fontWeight="bold">
-          Agenda de Turnos
+          Agenda diaria
         </Typography>
-
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => {
-            setTurnoSeleccionado(null);
-            setOpenDialog(true);
-          }}
-        >
-          Nuevo Turno
-        </Button>
       </Box>
 
       <Card>
@@ -122,34 +92,28 @@ export default function AgendaTurnos() {
           />
 
           {loading ? (
-            <CircularProgress />
+            <CircularProgress sx={{ mt: 3 }} />
           ) : (
             <TurnosTable
               turnos={turnos}
-              onEdit={(t) => {
-                setTurnoSeleccionado(t);
-                setOpenDialog(true);
-              }}
-              onDelete={async (id) => {
-                await eliminarTurno(id);
-                cargarTurnos();
+              onEdit={() => {}}      // No se usa en agenda
+              onDelete={() => {}}    // No se usa en agenda
+              onPacienteClick={(turno) => {
+                navigate(
+                  `${PrivateRoutes.VISITS_NUEVA}?turnoId=${turno.id}`
+                );
               }}
             />
           )}
         </CardContent>
       </Card>
 
-      <TurnoDialog
-        open={openDialog}
-        turno={turnoSeleccionado}
-        onClose={() => setOpenDialog(false)}
-        onSave={guardarTurno}
-      />
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        onClose={() =>
+          setSnackbar({ ...snackbar, open: false })
+        }
       >
         <Alert severity={snackbar.severity}>
           {snackbar.message}

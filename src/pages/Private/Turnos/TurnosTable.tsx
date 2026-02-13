@@ -11,9 +11,9 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { PropsTurnosTable } from "../../../interfaces/turno.interface";
 import { EstadoTurno } from "../../../enums/estadoTurno.enum";
@@ -31,8 +31,8 @@ const estadoColor = (estado: EstadoTurno) => {
 
 export default function TurnosTable({
   turnos,
-  onEdit,
   onDelete,
+  onPacienteClick,
 }: PropsTurnosTable) {
   if (!turnos.length) {
     return (
@@ -66,7 +66,18 @@ export default function TurnosTable({
               <TableCell>{turno.hora}</TableCell>
 
               <TableCell>
-                {turno.paciente.apellido}, {turno.paciente.nombre}
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <Typography>
+                    {turno.paciente.apellido}, {turno.paciente.nombre}
+                  </Typography>
+
+                  <IconButton
+                    size="small"
+                    onClick={() => onPacienteClick(turno)}
+                  >
+                    <ArrowForwardIcon fontSize="small" />
+                  </IconButton>
+                </Stack>
               </TableCell>
 
               <TableCell>{turno.paciente.dni}</TableCell>
@@ -80,10 +91,6 @@ export default function TurnosTable({
               </TableCell>
 
               <TableCell align="right">
-                <IconButton onClick={() => onEdit(turno)}>
-                  <EditIcon />
-                </IconButton>
-
                 <IconButton onClick={() => onDelete(turno.id)}>
                   <DeleteIcon color="error" />
                 </IconButton>

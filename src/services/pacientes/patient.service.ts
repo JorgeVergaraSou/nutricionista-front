@@ -71,11 +71,12 @@ export const createAnthropometric = async (
     talla: string | number;
     peso: string | number;
     imc: string | number;
+    visitId?: number;
     porcentajeGrasa?: string | number | null;
     porcentajeMusculo?: string | number | null;
     porcentajeGrasaABD?: string | number | null;
     kcalBasales?: string | number | null;
-    circAbdominal?: string | number | null;
+    circAbdominal?: string | number | null   
   }
 ) => {
   const { data } = await axios.post(apiUrl + `${API}/${patientId}/anthropometrics`, dto);

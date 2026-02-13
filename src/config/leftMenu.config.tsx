@@ -60,10 +60,9 @@ export const leftMenuConfig: LeftMenuItem[] = [
     icon: <CalendarMonthIcon />,
     roles: [Roles.ADMIN, Roles.USER],
     children: [
-      { label: "Agenda", 
-        icon: <SearchIcon />, 
-        path: PrivateRoutes.AGENDA_TURNOS },
-      { label: "Nuevo turno", icon: <AddIcon />, path: "/admin/turnos/nuevo" },
+      { label: "Agenda", icon: <SearchIcon />, path: PrivateRoutes.AGENDA_TURNOS },
+      { label: "Agenda semanal", icon: <SearchIcon />, path: PrivateRoutes.AGENDA_SEMANAL },
+      { label: "Nuevo turno", icon: <AddIcon />, path: PrivateRoutes.TURNOS_GESTION },
     ],
   },
 /*
