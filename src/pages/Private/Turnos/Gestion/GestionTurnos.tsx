@@ -194,6 +194,7 @@ export default function GestionTurnos() {
                 render={({ field }) => (
                   <DatePicker
                     label="Fecha"
+                    format="DD/MM/YYYY"
                     value={dayjs(field.value)}
                     onChange={(v) =>
                       field.onChange(v?.format("YYYY-MM-DD"))

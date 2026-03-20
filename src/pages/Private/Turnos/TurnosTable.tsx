@@ -11,9 +11,11 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 
 import { PropsTurnosTable } from "../../../interfaces/turno.interface";
 import { EstadoTurno } from "../../../enums/estadoTurno.enum";
@@ -24,8 +26,12 @@ const estadoColor = (estado: EstadoTurno) => {
       return "success";
     case EstadoTurno.CANCELADO:
       return "error";
-    default:
+    case EstadoTurno.NO_ASISTIO:
       return "warning";
+    case EstadoTurno.ATENDIDO:
+      return "info";
+    default:
+      return "default";
   }
 };
 
@@ -33,6 +39,8 @@ export default function TurnosTable({
   turnos,
   onDelete,
   onPacienteClick,
+  
+  onNoAsistio,
 }: PropsTurnosTable) {
   if (!turnos.length) {
     return (
@@ -91,6 +99,14 @@ export default function TurnosTable({
               </TableCell>
 
               <TableCell align="right">
+                {turno.estado === EstadoTurno.CONFIRMADO && (
+                  <IconButton
+                    onClick={() => onNoAsistio(turno.id)}
+                  >
+                    <PersonOffIcon color="warning" />
+                  </IconButton>
+                )}
+
                 <IconButton onClick={() => onDelete(turno.id)}>
                   <DeleteIcon color="error" />
                 </IconButton>

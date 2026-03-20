@@ -6,7 +6,6 @@ import {
 } from "@mui/material";
 import { autocompletePaciente } from "../services/pacientes/patient.service";
 
-
 interface PacienteOption {
   id: number;
   nombre: string;
@@ -17,18 +16,20 @@ interface PacienteOption {
 interface Props {
   value: PacienteOption | null;
   onChange: (paciente: PacienteOption | null) => void;
+  label?: string;
 }
 
 export default function AutocompletePaciente({
   value,
   onChange,
+  label = "Buscar por nombre, apellido o DNI",
 }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<PacienteOption[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (inputValue.trim().length < 2) {
+    if (inputValue.trim().length < 1) {
       setOptions([]);
       return;
     }
@@ -53,6 +54,7 @@ export default function AutocompletePaciente({
       options={options}
       value={value}
       loading={loading}
+      filterOptions={(x) => x} // 🔥 IMPORTANTE: desactiva filtro interno de MUI
       isOptionEqualToValue={(o, v) => o.id === v.id}
       getOptionLabel={(o) =>
         `${o.apellido}, ${o.nombre} (${o.dni})`
@@ -62,8 +64,7 @@ export default function AutocompletePaciente({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Paciente"
-          placeholder="Buscar por nombre o DNI"
+          label={label}
           fullWidth
           InputProps={{
             ...params.InputProps,

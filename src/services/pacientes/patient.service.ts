@@ -8,12 +8,15 @@ export const autocompletePaciente = async (term: string) => {
   const { data } = await axios.get(apiUrl + `${API}/autocomplete`, {
     params: { q: term },
   });
+  console.log("Autocomplete response:", data);
   return data.data; // solo devolvemos array de pacientes
 };
 
-export const getPacienteById = async (id: number) => {
-  const { data } = await axios.get(apiUrl + `${API}/traerPaciente/${id}`);
-  // supones que devuelve el paciente completo como objeto en data
+// Obtener un paciente por su ID
+/* ---------------- PATIENT ---------------- */
+
+export const getPatientById = async (id: number) => {
+  const { data } = await axios.get(`${apiUrl}${API}/perfil/${id}`);
   return data;
 };
 
@@ -22,11 +25,36 @@ export const createFullPatientService = async (data: any) => {
   return axios.post(`${apiUrl}${API}/registro-completo`, data);
 };
 
+export const updatePatientService = async (
+  id: number,
+  dto: any
+) => {
+  const { data } = await axios.put(
+    `${apiUrl}${API}/${id}`,
+    dto
+  );
+
+  return data;
+};
+
+export const getClinicalHistory = async (patientId: number) => {
+  const res = await axios.get(
+    `/patients/${patientId}/clinical-history`
+  );
+  return res.data;
+};
 /* ---------- CREATE / DELETE helpers para los acordeones ---------- */
 
 /* Antecedentes */
-export const createAntecedent = async (patientId: number, dto: { descripcion: string }) => {
-  const { data } = await axios.post(apiUrl + `${API}/${patientId}/antecedents`, dto);
+export const createAntecedent = async (
+  patientId: number,
+  dto: { tipo: string; titulo: string; detalle?: string; fechaEvento?: string }
+) => {
+  const { data } = await axios.post(
+    apiUrl + `${API}/${patientId}/antecedents`,
+    dto
+  );
+
   return data;
 };
 

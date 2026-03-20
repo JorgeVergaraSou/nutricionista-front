@@ -19,13 +19,16 @@ import AgendaTurnos from './pages/Private/Turnos/AgendaTurnos';
 import AgendaSemanal from './pages/Private/Turnos/AgendaSemanal';
 import ConsultaDiaria from './pages/Private/Visits/ConsultaDiaria';
 import GestionTurnos from './pages/Private/Turnos/Gestion/GestionTurnos';
-//import PatientHistory from './pages/Private/Visits/PatientHistory';
+import PatientHistory from './pages/Private/Pacientes/PatientHistory';
+import TurnosHistorial from './pages/Private/Turnos/TurnosHistorial';
+import PatientProfilePage from './pages/Private/Pacientes/PatientProfile';
+import EditPatientPage from './pages/Private/Pacientes/EditPatientPage';
 const Login = lazy(() => import('./pages/Login/Login'));
 const Private = lazy(() => import('./pages/Private/Private'));
 
 function App() {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <Suspense fallback={<div>Loading...</div>}>        
 
         <RoutesWithNotFound>
@@ -45,8 +48,15 @@ function App() {
               <Route path={PrivateRoutes.AGENDA_TURNOS} element={<AgendaTurnos/>} />
               <Route path={PrivateRoutes.AGENDA_SEMANAL} element={<AgendaSemanal/>} />
               <Route path={PrivateRoutes.VISITS_NUEVA} element={<ConsultaDiaria />} />
-             {/* <Route path={PrivateRoutes.VISITS_HISTORIAL} element={<PatientHistory />}/> */} 
+
+              <Route path={PrivateRoutes.PERFIL_PACIENTE} element={<PatientProfilePage />} />
+              <Route path={PrivateRoutes.EDITAR_PACIENTE} element={<EditPatientPage />} />
+              
+              <Route path={PrivateRoutes.VISITS_HISTORY} element={<PatientHistory />}/> 
+              <Route path={PrivateRoutes.VISITA_HISTORICA} element={<PatientHistory />}/> 
+
               <Route path={PrivateRoutes.TURNOS_GESTION} element={<GestionTurnos />}  />
+              <Route path={PrivateRoutes.TURNOS_HISTORIAL} element={<TurnosHistorial />}            />
 
               <Route element={<RoleGuard role={Roles.ADMIN} />}>
                 <Route path={PrivateRoutes.ADMIN} element={<Admin />} />

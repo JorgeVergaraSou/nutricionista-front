@@ -1,6 +1,6 @@
 // src/config/leftMenu.config.tsx
 import React from "react";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+//import DashboardIcon from "@mui/icons-material/Dashboard";
 //import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -23,12 +23,13 @@ export type LeftMenuItem = {
 };
 
 export const leftMenuConfig: LeftMenuItem[] = [
+  /*
   {
     label: "Inicio",
     icon: <DashboardIcon />,
     path: PrivateRoutes.ADMIN,
     roles: [Roles.ADMIN, Roles.USER],
-  },
+  }, */
 /*
   {
     label: "Usuarios",
@@ -52,6 +53,11 @@ export const leftMenuConfig: LeftMenuItem[] = [
         icon: <AddIcon />,
         path: PrivateRoutes.NUEVO_PACIENTE,
       },
+      {
+        label: "Historial de pacientes",
+        icon: <SearchIcon />,
+        path: PrivateRoutes.VISITA_HISTORICA,
+      },
     ],
   },
 
@@ -60,9 +66,10 @@ export const leftMenuConfig: LeftMenuItem[] = [
     icon: <CalendarMonthIcon />,
     roles: [Roles.ADMIN, Roles.USER],
     children: [
-      { label: "Agenda", icon: <SearchIcon />, path: PrivateRoutes.AGENDA_TURNOS },
-      { label: "Agenda semanal", icon: <SearchIcon />, path: PrivateRoutes.AGENDA_SEMANAL },
       { label: "Nuevo turno", icon: <AddIcon />, path: PrivateRoutes.TURNOS_GESTION },
+      { label: "Agenda", icon: <SearchIcon />, path: PrivateRoutes.AGENDA_TURNOS },
+      { label: "Agenda semanal", icon: <SearchIcon />, path: PrivateRoutes.AGENDA_SEMANAL },     
+      { label: "Historial de turnos", icon: <SearchIcon />, path: PrivateRoutes.TURNOS_HISTORIAL },
     ],
   },
 /*

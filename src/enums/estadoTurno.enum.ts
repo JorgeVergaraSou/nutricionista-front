@@ -1,3 +1,4 @@
+// src/enums/estadoTurno.enum.ts
 export enum EstadoTurno {
   PENDIENTE = "PENDIENTE",       // creado pero no confirmado
   CONFIRMADO = "CONFIRMADO",     // confirmado por paciente

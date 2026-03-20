@@ -5,10 +5,11 @@ import { Anthropometric } from "./anthropometric.interface";
 export interface Visit {
   id: number;
   fecha: string;
-  motivoConsulta?: string;
-  observaciones?: string;
-  planTratamiento?: string;
-  evolucion?: string;
+
+  motivoConsulta?: string | null;
+  diagnostico?: string | null;
+
   turno?: Turno;
-  medicionesAntropometricas: Anthropometric[];
+
+  medicionesAntropometricas?: Anthropometric[];
 }

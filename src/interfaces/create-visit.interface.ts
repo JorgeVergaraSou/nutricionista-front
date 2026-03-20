@@ -1,16 +1,33 @@
-// src/interfaces/create-visit.interface.ts
 export interface CreateVisitDto {
   patientId: number;
-  turnoId?: number;
-  fecha: string;
+  turnoId: number;
 
-  motivoConsulta?: string;
-  observaciones?: string;
+  motivoConsulta: string;
+  enfermedadActual?: string;
+  examenFisico?: string;
+  diagnostico?: string;
   planTratamiento?: string;
   evolucion?: string;
+  observaciones?: string;
 
   antropometria?: {
-    peso?: number | null;
-    talla?: number | null;
+    peso?: number;
+    talla?: number;
+
+    circAbdominal?: number;
+    porcentajeGrasa?: number;
+    porcentajeGrasaABD?: number;
+    porcentajeMusculo?: number;
+    kcalBasales?: number;
   };
+
+  prescripciones?: {
+    nombre: string;
+    indicaciones: string;
+  }[];
+
+  analisisBioquimicos?: {
+    tipo: string;
+    resultados: string;
+  }[];
 }

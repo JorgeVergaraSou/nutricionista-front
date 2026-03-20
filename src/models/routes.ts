@@ -10,12 +10,22 @@ export const PrivateRoutes = {
     GUEST: '/guest',
     LOGOUT: '/logout',
     PERFIL: '/perfil',
+
     BUSCAR_PACIENTE: '/admin/pacientes/buscar',
     NUEVO_PACIENTE: '/admin/pacientes/nuevo-paciente',
+    VISITS_HISTORY: '/admin/pacientes/:patientId/history',
+    VISITA_HISTORICA: '/admin/pacientes/history',
+    PERFIL_PACIENTE: '/admin/pacientes/:patientId/perfil',
+    EDITAR_PACIENTE: "/admin/pacientes/:patientId/editar",
+
+
+    VISITS_NUEVA: '/admin/visits/nueva',
+
+    
+
     AGENDA_TURNOS: '/admin/turnos/agenda-turnos',
     AGENDA_SEMANAL: '/admin/turnos/agenda-semanal',
-    VISITS_NUEVA: '/admin/visits/nueva',
-    VISITS_HISTORIAL: '/admin/visits/historial/:patientId',
-
     TURNOS_GESTION: '/admin/turnos/gestion',
+    TURNOS_HISTORIAL: '/admin/turnos/historial-turnos',
+
 }

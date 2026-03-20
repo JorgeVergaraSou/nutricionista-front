@@ -9,6 +9,11 @@ import {
   Snackbar,
   Alert,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 
 import dayjs from "dayjs";
@@ -17,8 +22,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 
 import { useNavigate } from "react-router-dom";
 import TurnosTable from "./TurnosTable";
-
-import { obtenerTurnosPorFecha } from "../../../services/turnos/turnos.service";
+import { marcarNoAsistio, obtenerTurnosPorFecha } from "../../../services/turnos/turnos.service";
 
 import {
   FormFiltro,
@@ -38,15 +42,15 @@ export default function AgendaTurnos() {
   const [turnos, setTurnos] = useState<Turno[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const [turnoNoAsistio, setTurnoNoAsistio] = useState<number | null>(null);
+
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
 
-  // --------------------------------------------------
-  // 📡 Cargar turnos por día
-  // --------------------------------------------------
+  // 📡 Cargar turnos
   const cargarTurnos = async () => {
     setLoading(true);
     try {
@@ -67,6 +71,34 @@ export default function AgendaTurnos() {
     cargarTurnos();
   }, [fecha]);
 
+  // 👉 Abrir modal
+  const handleNoAsistioClick = (id: number) => {
+    setTurnoNoAsistio(id);
+  };
+
+  // 👉 Confirmar inasistencia
+  const confirmarNoAsistio = async () => {
+    if (!turnoNoAsistio) return;
+
+    try {
+      await marcarNoAsistio(turnoNoAsistio);
+      setSnackbar({
+        open: true,
+        message: "Turno marcado como No asistió",
+        severity: "success",
+      });
+      cargarTurnos();
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Error al marcar inasistencia",
+        severity: "error",
+      });
+    } finally {
+      setTurnoNoAsistio(null);
+    }
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Box mb={3}>
@@ -83,6 +115,7 @@ export default function AgendaTurnos() {
             render={({ field }) => (
               <DatePicker
                 label="Fecha"
+                format="DD/MM/YYYY"
                 value={dayjs(field.value)}
                 onChange={(v) =>
                   field.onChange(v?.format("YYYY-MM-DD"))
@@ -96,8 +129,8 @@ export default function AgendaTurnos() {
           ) : (
             <TurnosTable
               turnos={turnos}
-              onEdit={() => {}}      // No se usa en agenda
-              onDelete={() => {}}    // No se usa en agenda
+              onDelete={() => {}}
+              onNoAsistio={handleNoAsistioClick}
               onPacienteClick={(turno) => {
                 navigate(
                   `${PrivateRoutes.VISITS_NUEVA}?turnoId=${turno.id}`
@@ -107,6 +140,29 @@ export default function AgendaTurnos() {
           )}
         </CardContent>
       </Card>
+
+      {/* 🔥 MODAL CONFIRMACION */}
+      <Dialog
+        open={Boolean(turnoNoAsistio)}
+        onClose={() => setTurnoNoAsistio(null)}
+      >
+        <DialogTitle>Confirmar inasistencia</DialogTitle>
+        <DialogContent>
+          ¿Seguro que querés marcar este turno como "No asistió"?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setTurnoNoAsistio(null)}>
+            Cancelar
+          </Button>
+          <Button
+            color="warning"
+            variant="contained"
+            onClick={confirmarNoAsistio}
+          >
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}
