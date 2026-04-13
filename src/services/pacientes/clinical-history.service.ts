@@ -1,3 +1,4 @@
+//src/services/pacientes/clinical-history.service.ts
 import axios from "axios";
 import { ClinicalHistoryItem } from "../../interfaces/clinical-history.interface";
 

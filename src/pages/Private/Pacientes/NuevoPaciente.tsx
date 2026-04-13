@@ -18,8 +18,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   IconButton,
+  MenuItem
 } from "@mui/material";
-
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -28,21 +28,23 @@ import { Controller } from "react-hook-form";
 import dayjs from "dayjs";
 
 import { createFullPatientService } from "../../../services/pacientes/patient.service";
+import { AntecedentType } from "../../../enums/antecedentes.enum";
 
 /* ============================
    SCHEMAS
 ============================ */
 
 const antecedentesSchema = z.object({
-  tipo: z.string().min(1, "Requerido"),
-  descripcion: z.string().min(1, "Requerido"),
+  tipo: z.enum(Object.values(AntecedentType) as [string, ...string[]]),
+  titulo: z.string().min(1, "Requerido"),
+  detalle: z.string().optional(),
 });
 
 const schema = z.object({
-  nombre: z.string().min(2, "Nombre obligatorio"),
-  apellido: z.string().min(2, "Apellido obligatorio"),
-  dni: z.string().min(7, "DNI inválido"),
-  fechaNacimiento: z.string().optional(),
+  nombre: z.string().trim().min(2, "Nombre obligatorio"),
+  apellido: z.string().trim().min(2, "Apellido obligatorio"),
+  dni: z.string().trim().regex(/^\d{7,8}$/, "DNI inválido"),
+  fechaNacimiento: z.string().nullable().optional(),
   direccion: z.string().optional(),
   telefono: z.string().optional(),
   email: z.string().email("Email inválido").optional().or(z.literal("")),
@@ -63,7 +65,13 @@ export default function NuevoPaciente() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      antecedentes: [],
+      antecedentes: [
+        {
+          tipo: AntecedentType.FAMILIAR,
+          titulo: "",
+          detalle: "",
+        },
+      ],
     },
   });
 
@@ -85,9 +93,7 @@ export default function NuevoPaciente() {
   const onSubmit = async (data: FormData) => {
     try {
       const payload = {
-        nombre: data.nombre,
-        apellido: data.apellido,
-        dni: data.dni,
+        ...data,
         fechaNacimiento: data.fechaNacimiento || null,
         direccion: data.direccion || null,
         telefono: data.telefono || null,
@@ -169,7 +175,7 @@ export default function NuevoPaciente() {
                   format="DD/MM/YYYY"
                   value={field.value ? dayjs(field.value) : null}
                   onChange={(value) =>
-                    field.onChange(value ? value.format("YYYY-MM-DD") : "")
+                    field.onChange(value ? value.format("YYYY-MM-DD") : null)
                   }
                 />
               )}
@@ -205,19 +211,48 @@ export default function NuevoPaciente() {
                       mb: 2,
                     }}
                   >
-                    <TextField
-                      label="Tipo"
-                      fullWidth
-                      {...register(`antecedentes.${index}.tipo`)}
+                    <Controller
+                      control={control}
+                      name={`antecedentes.${index}.tipo`}
+                      render={({ field }) => (
+                        <TextField
+                          select
+                          label="Tipo"
+                          fullWidth
+                          value={field.value || ""} // 🔥 clave
+                          onChange={field.onChange}
+                          error={!!errors.antecedentes?.[index]?.tipo}
+                          helperText={errors.antecedentes?.[index]?.tipo?.message}
+                        >
+                          {Object.values(AntecedentType).map((tipo) => (
+                            <MenuItem key={tipo} value={tipo}>
+                              {tipo}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      )}
                     />
 
                     <TextField
-                      label="Descripción"
+                      label="Título"
                       fullWidth
-                      {...register(`antecedentes.${index}.descripcion`)}
+                      {...register(`antecedentes.${index}.titulo`)}
+                      error={!!errors.antecedentes?.[index]?.titulo}
+                      helperText={errors.antecedentes?.[index]?.titulo?.message}
                     />
 
-                    <IconButton onClick={() => antecedentesFA.remove(index)}>
+                    <TextField
+                      label="Detalle"
+                      fullWidth
+                      multiline
+                      rows={2}
+                      {...register(`antecedentes.${index}.detalle`)}
+                    />
+
+                    <IconButton
+                      onClick={() => antecedentesFA.remove(index)}
+                      disabled={antecedentesFA.fields.length === 1}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </Box>
@@ -226,8 +261,9 @@ export default function NuevoPaciente() {
                 <Button
                   onClick={() =>
                     antecedentesFA.append({
-                      tipo: "",
-                      descripcion: "",
+                      tipo: AntecedentType.FAMILIAR,
+                      titulo: "",
+                      detalle: "",
                     })
                   }
                 >

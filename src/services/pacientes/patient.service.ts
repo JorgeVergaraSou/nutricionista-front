@@ -17,6 +17,7 @@ export const autocompletePaciente = async (term: string) => {
 
 export const getPatientById = async (id: number) => {
   const { data } = await axios.get(`${apiUrl}${API}/perfil/${id}`);
+  console.log("getPatientById response:", data);
   return data;
 };
 

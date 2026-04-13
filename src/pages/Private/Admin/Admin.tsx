@@ -30,19 +30,19 @@ function AdminPage() {
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 2, textAlign: "center", borderRadius: 2 }}>
-            Elemento 1
+            
           </Card>
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 2, textAlign: "center", borderRadius: 2 }}>
-            ADMIN PAGE
+          
           </Card>
         </Grid>
 
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ p: 2, textAlign: "center", borderRadius: 2 }}>
-            Elemento 3
+            
           </Card>
         </Grid>
       </Grid>

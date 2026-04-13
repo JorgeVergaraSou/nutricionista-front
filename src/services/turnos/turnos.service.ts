@@ -10,8 +10,13 @@ export const obtenerTurnosPorFecha = (fecha: string) =>{
 }
  
 
-export const crearTurno = (data: any) =>
+export const crearTurno = (data: any) =>{  
   axios.post(`${apiUrl}/turnos/dar_turno`, data);
+
+  console.log("Data enviada para crear turno:", data);
+
+}
+
 
 export const editarTurno = (id: number, data: any) =>
   axios.patch(`${apiUrl}/turnos/${id}`, data);

@@ -90,19 +90,19 @@ export default function BuscarPaciente() {
               >
                 Historia Clínica
               </Button>
-                
+
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={() =>
                   navigate(
-                    `/admin/visitas/nueva/${selectedPatient.id}`
+                    `${PrivateRoutes.VISITS_NUEVA}?patientId=${selectedPatient.id}`
                   )
                 }
               >
                 Nueva Visita
               </Button>
-               
+
             </Stack>
           </CardContent>
         </Card>

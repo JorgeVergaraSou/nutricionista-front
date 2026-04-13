@@ -9,8 +9,6 @@ import {
   CardContent,
   Stack,
   CircularProgress,
-  Chip,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -31,24 +29,21 @@ import {
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 
-import { PatientProfile } from "../../../interfaces/patient-profile.interface";
-import { getPatientById } from "../../../services/pacientes/patient.service";
+import PatientHeader from "../../../components/patient/PatientHeader";
+import AntecedentesSection from "../../../components/patient/AntecedentesSection";
 
-import { useClinicalHistory } from "../../../hooks/useClinicalHistory";
-import PatientTimeline from "../../../components/PatientTimeline";
+
+import { PatientFull } from "../../../interfaces/patient-full.interface";
+import { getPatientById } from "../../../services/pacientes/patient.service";
 
 
 export default function PatientProfilePage() {
   const { patientId } = useParams<{ patientId: string }>();
-
-  const [patient, setPatient] = useState<PatientProfile | null>(null);
+const [patient, setPatient] = useState<PatientFull | null>(null);
   const [loading, setLoading] = useState(true);
   const [openEvolution, setOpenEvolution] = useState(false);
 
-  const {
-    data: clinicalHistory,
-    loading: loadingHistory,
-  } = useClinicalHistory(Number(patientId));
+
 
   useEffect(() => {
     if (!patientId) return;
@@ -79,17 +74,6 @@ export default function PatientProfilePage() {
       </Box>
     );
 
-  const edad = patient.fechaNacimiento
-    ? dayjs().diff(dayjs(patient.fechaNacimiento), "year")
-    : null;
-
-  const grupoEtario =
-    edad && edad >= 65
-      ? "Adulto mayor"
-      : edad && edad >= 40
-      ? "Adulto"
-      : "Adulto joven";
-
   const alertas: string[] = [];
 
   if (
@@ -108,13 +92,14 @@ export default function PatientProfilePage() {
 
   const evolutionData =
     patient.visitas
-      ?.map((v) => {
+      ?.map((v: any) => {
         const m = v.medicionesAntropometricas?.[0];
         if (!m) return null;
 
         return {
           fecha: dayjs(v.fecha).format("DD/MM"),
           peso: m.peso ? Number(m.peso) : null,
+          imc: m.imc ? Number(m.imc) : null,
         };
       })
       .filter(Boolean)
@@ -122,40 +107,10 @@ export default function PatientProfilePage() {
 
   return (
     <Box sx={{ p: 4, maxWidth: 1100, mx: "auto" }}>
-      {/* HEADER */}
-      <Card sx={{ borderRadius: 3, mb: 3 }}>
-        <CardContent>
-          <Stack spacing={2}>
-            <Typography variant="h5" fontWeight="bold">
-              {patient.apellido}, {patient.nombre}
-            </Typography>
-
-            <Stack direction="row" spacing={1} flexWrap="wrap">
-              <Chip label={`DNI ${patient.dni}`} size="small" />
-
-              {edad && (
-                <Chip
-                  label={`${edad} años • ${grupoEtario}`}
-                  size="small"
-                  color="primary"
-                />
-              )}
-
-              {alertas.map((a) => (
-                <Chip key={a} label={a} size="small" color="error" />
-              ))}
-            </Stack>
-
-            <Button
-              variant="outlined"
-              onClick={() => setOpenEvolution(true)}
-              sx={{ width: "fit-content" }}
-            >
-              📊 Evolución del paciente
-            </Button>
-          </Stack>
-        </CardContent>
-      </Card>
+      <PatientHeader
+        patient={patient}
+        onOpenEvolution={() => setOpenEvolution(true)}
+      />
 
       <Grid container spacing={3}>
         {/* DATOS PERSONALES */}
@@ -181,27 +136,12 @@ export default function PatientProfilePage() {
           </Card>
         </Grid>
 
-        {/* HISTORIA CLÍNICA PRO */}
-        <Grid size={{ xs: 12 }}>
-          <Card sx={{ borderRadius: 3 }}>
-            <CardContent>
-              <Typography fontWeight="bold" mb={2}>
-                Historia clínica
-              </Typography>
-
-              {loadingHistory ? (
-                <CircularProgress />
-              ) : !Array.isArray(clinicalHistory) ||
-                clinicalHistory.length === 0 ? (
-                <Typography color="text.secondary">
-                  Sin registros clínicos
-                </Typography>
-              ) : (
-                <PatientTimeline history={clinicalHistory} />
-              )}
-            </CardContent>
-          </Card>
+        {/* 🔥 NUEVO: ANTECEDENTES */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <AntecedentesSection antecedentes={patient.antecedentes || []} />
         </Grid>
+
+
       </Grid>
 
       {/* MODAL */}
@@ -223,7 +163,8 @@ export default function PatientProfilePage() {
                 <XAxis dataKey="fecha" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="peso" />
+                <Line type="monotone" dataKey="peso" name="Peso (kg)" />
+                <Line type="monotone" dataKey="imc" name="IMC" />
               </LineChart>
             </ResponsiveContainer>
           )}

@@ -19,10 +19,43 @@ import {
   getEstadoColor,
 } from "../utilities/clinical-format";
 import FileList from "./files/FileList";
+import { calcularEstado } from "../utilities/analisis";
 
 type Props = {
   history: any[];
 };
+
+type AnalisisItem = {
+  nombre?: string;
+  valor?: number | null;
+  unidad?: string | null;
+  valorMin?: number | null;
+  valorMax?: number | null;
+};
+
+type AnalisisItemMedico = {
+  parametro?: string;
+  valor?: number | null;
+  unidad?: string | null;
+  rangoReferencia?: {
+    min?: number | null;
+    max?: number | null;
+  };
+};
+
+function adaptAnalisisItem(it: AnalisisItem): AnalisisItemMedico {
+  return {
+    parametro: it.nombre,
+    valor: it.valor,
+    unidad: it.unidad,
+    rangoReferencia: {
+      min: it.valorMin,
+      max: it.valorMax,
+    },
+  };
+}
+
+type EstadoColor = "success" | "warning" | "error" | "default";
 
 const getColor = (tipo: string) => {
   switch (tipo) {
@@ -192,54 +225,96 @@ export default function PatientTimeline({ history }: Props) {
               {/* ANALISIS */}
               {item.tipo === "ANALISIS" && (
                 <Box>
-                  <Typography mb={1}>
-                    <b>{item.data?.tipo}</b>
+                  <Typography mb={2} fontWeight={600}>
+                    {item.data?.tipo}
                   </Typography>
 
-                  {/* 🧪 NUEVO: TABLA DE ITEMS */}
                   {Array.isArray(item.data?.items) && item.data.items.length > 0 ? (
-                    <Box>
-                      {item.data.items.map((it: any, idx: number) => {
-                      
+                    <>
+                      {/* 🔥 HEADER */}
+                      <Box
+                        sx={{
+                          display: "grid",
+                          gridTemplateColumns: "2fr 1fr 1fr auto",
+                          gap: 2,
+                          mb: 1,
+                          px: 0.5,
+                        }}
+                      >
+                        <Typography variant="caption" fontWeight={600}>
+                          Parámetro
+                        </Typography>
+                        <Typography variant="caption" fontWeight={600}>
+                          Valor
+                        </Typography>
+                        <Typography variant="caption" fontWeight={600}>
+                          Rango
+                        </Typography>
+                        <Typography variant="caption" fontWeight={600}>
+                          Estado
+                        </Typography>
+                      </Box>
 
-                        return (
-                          <Box
-                            key={idx}
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              borderBottom: "1px solid #eee",
-                              py: 1,
-                            }}
-                          >
-                            <Typography>
-                              {it.nombre}
-                            </Typography>
+                      {/* 🔽 ITEMS */}
+                      <Stack spacing={1}>
+                        {item.data.items.map((raw: AnalisisItem, idx: number) => {
+                          const it = adaptAnalisisItem(raw);
 
-                            <Typography>
-                              {formatValor(it.valor, it.unidad)}
-                            </Typography>
+                          const estado = calcularEstado(
+                            it.valor ?? undefined,
+                            it.rangoReferencia?.min ?? undefined,
+                            it.rangoReferencia?.max ?? undefined
+                          );
 
-                            {it.valorMin !== null && it.valorMax !== null && (
-                              <Typography variant="caption" color="text.secondary">
-                                {formatRango(it.valorMin, it.valorMax)}
+                          const estadoColor = estado ? getEstadoColor(estado) : "default";
+
+                          return (
+                            <Box
+                              key={idx}
+                              sx={{
+                                display: "grid",
+                                gridTemplateColumns: "2fr 1fr 1fr auto",
+                                gap: 2,
+                                alignItems: "center",
+                                borderBottom: "1px solid #eee",
+                                py: 1,
+                              }}
+                            >
+                              {/* NOMBRE */}
+                              <Typography fontWeight={500}>
+                                {it.parametro || "-"}
                               </Typography>
-                            )}
 
-                            {it.estado && (
-                              <Chip
-                                label={it.estado}
-                                color={getEstadoColor(it.estado) as any}
-                                size="small"
-                              />
-                            )}
-                          </Box>
-                        );
-                      })}
-                    </Box>
+                              {/* VALOR */}
+                              <Typography>
+                                {formatValor(it.valor, it.unidad ?? undefined)}
+                              </Typography>
+
+                              {/* RANGO */}
+                              <Typography variant="caption" color="text.secondary">
+                                {it.rangoReferencia?.min != null &&
+                                  it.rangoReferencia?.max != null
+                                  ? `(${formatRango(
+                                    it.rangoReferencia.min,
+                                    it.rangoReferencia.max
+                                  )})`
+                                  : "-"}
+                              </Typography>
+
+                              {/* ESTADO */}
+                              {estado && (
+                                <Chip
+                                  label={estado}
+                                  color={estadoColor as EstadoColor}
+                                  size="small"
+                                />
+                              )}
+                            </Box>
+                          );
+                        })}
+                      </Stack>
+                    </>
                   ) : (
-                    /* 🧯 FALLBACK (NO ROMPE NADA) */
                     <Typography variant="body2">
                       {item.data?.resultados || "Sin resultados"}
                     </Typography>
