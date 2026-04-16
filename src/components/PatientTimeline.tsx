@@ -333,6 +333,10 @@ export default function PatientTimeline({ history }: Props) {
                     {item.data?.dosis} • {item.data?.intervalo}
                   </Typography>
 
+                   <Typography>
+                    Desde • {item.data?.fechaInicio} hasta {item.data?.fechaFin || "indefinido"}
+                  </Typography>
+
                   <Chip
                     label={
                       item.data?.activa ? "Activa" : "Finalizada"
